@@ -2,10 +2,13 @@ import React, {useEffect} from 'react'
 import { useContext } from 'react'
 import PlacesFinder from '../Apis/PlacesFinder'
 import { PlacesContext } from '../context/PlacesContext'
+import {useNavigate} from 'react-router-dom'
 
 
 const PlacesList = (props) => {
   const {places, setPlaces} = useContext(PlacesContext)
+  let history = useNavigate()
+
    useEffect(() => {
     const fetchData = async () => {
       try{
@@ -28,6 +31,9 @@ const handleDelete = async(id) => {
   }
 }
 
+const handleUpdate = (id) => {
+  history(`/place/${id}/update`)
+}
 
   return (
     <div className='list-group'>
@@ -50,7 +56,7 @@ const handleDelete = async(id) => {
               <td>{place.location}</td>
               <td>{"$".repeat(place.pricerange)}</td>
               <td>reviews</td>
-              <td><button className="btn btn-warning">Update</button></td>
+              <td><button onClick={() => handleUpdate(place.id)} className="btn btn-warning">Update</button></td>
               <td><button onClick={() => handleDelete(place.id)} className="btn btn-danger">Delete</button></td>
             </tr>)
           })}
