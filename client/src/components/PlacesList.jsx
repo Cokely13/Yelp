@@ -1,6 +1,34 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import { useContext } from 'react'
+import PlacesFinder from '../Apis/PlacesFinder'
+import { PlacesContext } from '../context/PlacesContext'
 
-function PlacesList() {
+
+const PlacesList = (props) => {
+  const {places, setPlaces} = useContext(PlacesContext)
+   useEffect(() => {
+    const fetchData = async () => {
+      try{
+        const response = await PlacesFinder.get("/")
+        setPlaces(response.data.data.restaurants)
+      } catch (err) {}
+    };
+      fetchData();
+    }, [])
+
+const handleDelete = async(id) => {
+  try{
+   const response = await PlacesFinder.delete(`/${id}`)
+   setPlaces(places.filter(place => {
+    return place.id !== id
+   }))
+   console.log(response)
+  } catch (err){
+
+  }
+}
+
+
   return (
     <div className='list-group'>
       <table className="table table-hover table-dark">
@@ -15,14 +43,17 @@ function PlacesList() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Mcdonalds</td>
-            <td>NY</td>
-            <td>$$$</td>
-            <td>Rating</td>
-            <td><button className="btn btn-warning">Update</button></td>
-            <td><button className="btn btn-danger">Delete</button></td>
-          </tr>
+          {places && places.map(place => {
+            return (
+            <tr key={place.id}>
+              <td>{place.name}</td>
+              <td>{place.location}</td>
+              <td>{"$".repeat(place.pricerange)}</td>
+              <td>reviews</td>
+              <td><button className="btn btn-warning">Update</button></td>
+              <td><button onClick={() => handleDelete(place.id)} className="btn btn-danger">Delete</button></td>
+            </tr>)
+          })}
         </tbody>
       </table>
     </div>

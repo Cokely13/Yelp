@@ -2,10 +2,12 @@ require("dotenv").config()
 const express = require("express")
 const db = require("./db/index")
 const morgan = require("morgan")
+const cors = require("cors")
 const app = express()
 
 app.use(morgan("dev"))
 
+app.use(cors())
 app.use(express.json())
 
 //get all restaurants
@@ -45,7 +47,6 @@ console.log(err)
 app.post("/home", async (req, res) => {
   try{
     const results = await db.query("INSERT INTO PLACES (name, location, pricerange) values ($1, $2, $3) returning *", [req.body.name, req.body.location, req.body.pricerange])
-    console.log("RES", results)
     res.status(201).json({
       status: "success",
       data: {
@@ -73,7 +74,6 @@ app.delete("/home/:id", async (req, res) => {
  app.put("/home/:id", async(req, res) => {
   try{
     const results = await db.query("UPDATE places SET name = $1, location = $2, pricerange = $3 where id = $4 returning *;", [req.body.name, req.body.location, req.body.pricerange, req.params.id])
-    console.log(results)
     res.status(201).json({
       status: "success",
       data: {
