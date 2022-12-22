@@ -20,7 +20,7 @@ const PlacesList = (props) => {
     }, [])
 
 const handleDelete = async(e, id) => {
-  // e.stopPropagation()
+  e.stopPropagation()
   try{
    const response = await PlacesFinder.delete(`/${id}`)
    setPlaces(places.filter(place => {
@@ -33,7 +33,7 @@ const handleDelete = async(e, id) => {
 }
 
 const handleUpdate = (e, id) => {
-  // e.stopPropagation()
+  e.stopPropagation()
   history(`/place/${id}/update`)
 }
 
