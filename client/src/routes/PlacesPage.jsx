@@ -4,7 +4,9 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import PlacesFinder from '../Apis/PlacesFinder'
-import StarRating from '../components/StarRating'
+import AddReview from '../components/AddReview'
+import Reviews from '../components/Reviews'
+
 import { PlacesContext } from '../context/PlacesContext'
 
 function PlacesPage(props) {
@@ -17,7 +19,7 @@ function PlacesPage(props) {
     const fetchData = async () => {
       try{
       const response = await PlacesFinder.get(`/${id}`)
-      setSelectedPlace(response.data.data.restaurants)
+      setSelectedPlace(response.data.data)
     } catch (err){
       console.log(err)
     }
@@ -27,9 +29,15 @@ function PlacesPage(props) {
 
 
   return (
-    <div>
-    <div>{selectedPlace && selectedPlace.name}</div>
-    <StarRating rating={3.1}/>
+    <div>{selectedPlace && (
+      <>
+      <h1 className='text-center display-1'>{selectedPlace.restaurants.name}</h1>
+      <div className="mt-3">
+      <Reviews reviews={selectedPlace.reviews}/>
+      <AddReview/>
+      </div>
+      </>
+    )}
     </div>
   )
 }

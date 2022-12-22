@@ -30,11 +30,13 @@ app.get("/home", async (req, res) => {
 
 app.get("/home/:id", async (req, res) => {
  try{
- const results = await db.query("select * from places where id= $1", [req.params.id])
+ const places = await db.query("select * from places where id= $1", [req.params.id]);
+ const reviews = await db.query("select * from reviews where place_id= $1", [req.params.id]);
  res.status(200).json({
   status: "sucess",
   data: {
-    restaurants: results.rows[0]
+    restaurants: places.rows[0],
+    reviews:reviews.rows
   },
 });
 } catch (err){
@@ -86,6 +88,21 @@ app.delete("/home/:id", async (req, res) => {
   }
 
  })
+
+ app.post("/home/:id/addReview", async (req, res) => {
+  try{
+    const newReview = await db.query("INSERT INTO reviews (place_id, name, review, rating) values ($1, $2, $3, $4) returning *", [req.params.id, req.body.name, req.body.review, req.body.rating])
+    res.status(201).json({
+      status: "success",
+      data: {
+        review: newReview.rows[0]
+      }
+     })
+
+  } catch (err){
+    console.log(err)
+  }
+})
 
 
 const port = process.env.PORT || 3000;
