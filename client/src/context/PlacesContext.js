@@ -5,11 +5,12 @@ export const PlacesContext = createContext()
 
 export const PlacesContextProvider = props => {
   const [places, setPlaces] =useState([])
+  const [selectedPlace, setSelectedPlace] =useState(null)
   const addPlaces = (place) =>{
     setPlaces([...places, place])
   }
     return (
-      <PlacesContext.Provider value={{places:places, setPlaces, addPlaces}}>
+      <PlacesContext.Provider value={{places:places, setPlaces, addPlaces,selectedPlace, setSelectedPlace}}>
         {props.children}
       </PlacesContext.Provider>
     )

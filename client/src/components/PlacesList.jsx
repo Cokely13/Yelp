@@ -19,7 +19,8 @@ const PlacesList = (props) => {
       fetchData();
     }, [])
 
-const handleDelete = async(id) => {
+const handleDelete = async(e, id) => {
+  // e.stopPropagation()
   try{
    const response = await PlacesFinder.delete(`/${id}`)
    setPlaces(places.filter(place => {
@@ -31,8 +32,13 @@ const handleDelete = async(id) => {
   }
 }
 
-const handleUpdate = (id) => {
+const handleUpdate = (e, id) => {
+  // e.stopPropagation()
   history(`/place/${id}/update`)
+}
+
+const handlePlaceSelect = (id) => {
+  history(`/place/${id}`)
 }
 
   return (
@@ -51,13 +57,13 @@ const handleUpdate = (id) => {
         <tbody>
           {places && places.map(place => {
             return (
-            <tr key={place.id}>
+            <tr onClick={() => handlePlaceSelect(place.id)}  key={place.id}>
               <td>{place.name}</td>
               <td>{place.location}</td>
               <td>{"$".repeat(place.pricerange)}</td>
               <td>reviews</td>
-              <td><button onClick={() => handleUpdate(place.id)} className="btn btn-warning">Update</button></td>
-              <td><button onClick={() => handleDelete(place.id)} className="btn btn-danger">Delete</button></td>
+              <td><button onClick={(e) => handleUpdate(e, place.id)} className="btn btn-warning">Update</button></td>
+              <td><button onClick={(e) => handleDelete(e, place.id)} className="btn btn-danger">Delete</button></td>
             </tr>)
           })}
         </tbody>
