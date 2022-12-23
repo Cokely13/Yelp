@@ -3,6 +3,7 @@ import { useContext } from 'react'
 import PlacesFinder from '../Apis/PlacesFinder'
 import { PlacesContext } from '../context/PlacesContext'
 import {useNavigate} from 'react-router-dom'
+import StarRating from './StarRating'
 
 
 const PlacesList = (props) => {
@@ -20,6 +21,7 @@ const PlacesList = (props) => {
     }, [])
 
 const handleDelete = async(e, id) => {
+  console.log("HELLO!")
   e.stopPropagation()
   try{
    const response = await PlacesFinder.delete(`/${id}`)
@@ -39,6 +41,20 @@ const handleUpdate = (e, id) => {
 
 const handlePlaceSelect = (id) => {
   history(`/place/${id}`)
+}
+
+const renderRating = (places) => {
+  if(!places.count){
+    return (
+      <span className='text-warning'> 0 Reviews</span>
+    )
+  }
+  return (
+    <>
+  <StarRating rating ={places.id}/>
+  <span className="text-warning ml-1">({places.count})</span>
+  </>
+  )
 }
 
   return (
@@ -61,7 +77,7 @@ const handlePlaceSelect = (id) => {
               <td>{place.name}</td>
               <td>{place.location}</td>
               <td>{"$".repeat(place.pricerange)}</td>
-              <td>reviews</td>
+              <td>{renderRating(place)}</td>
               <td><button onClick={(e) => handleUpdate(e, place.id)} className="btn btn-warning">Update</button></td>
               <td><button onClick={(e) => handleDelete(e, place.id)} className="btn btn-danger">Delete</button></td>
             </tr>)
